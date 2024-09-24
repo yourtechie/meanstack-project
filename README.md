@@ -379,13 +379,15 @@ Go back to the project root directory and run the following command:
 node server.js
 ```
    ![](images/16.png)
-   
+
 The server is now up and running, we can connect it via port 3300. To access it from the Internet, you need to open TCP port 3300 in your AWS Web Console for your EC2 Instance.
 
    ![](images/15.png)
 
 You should now be able to access your Book Register Application by opening a browser and going to http://<your_server_public_ip>:3300
+
    ![](images/17.png)
 
-Testing the Book Register Application:
+Testing the Book Management Application:
+
    ![](images/18.png)
