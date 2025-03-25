@@ -83,7 +83,7 @@ MongoDB stores data in flexible, JSON-like documents. For this application, we w
 
 3. Verify that the MongoDB service is up and running:
     ```bash
-    sudo systemctl status mongodb
+    sudo systemctl status mongod
     ```
    ![](images/8.png)
 
