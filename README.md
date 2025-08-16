@@ -167,7 +167,7 @@ MongoDB stores data in flexible, JSON-like documents. For this application, we w
 
 3. Create a file named `routes.js` and add the following code:
 
-    ```javascript
+```javascript
 const Book = require('./models/book');
 const path = require('path');
 
@@ -221,7 +221,7 @@ module.exports = function (app) {
     });
 };
 
-    ```
+```
    ![](images/12.png)
 
 4. Create a folder named `models`:
