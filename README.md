@@ -168,53 +168,59 @@ MongoDB stores data in flexible, JSON-like documents. For this application, we w
 3. Create a file named `routes.js` and add the following code:
 
     ```javascript
-    const Book = require('./models/book');
-    const path = require('path');
+const Book = require('./models/book');
+const path = require('path');
 
-    module.exports = function(app) {
-        app.get('/book', async (req, res) => {
-            try {
-                const books = await Book.find();
-                res.json(books);
-            } catch (err) {
-                res.status(500).json({ message: 'Error fetching books', error: err.message });
+module.exports = function (app) {
+    // Get all books
+    app.get('/book', async (req, res) => {
+        try {
+            const books = await Book.find();
+            res.json(books);
+        } catch (err) {
+            res.status(500).json({ message: 'Error fetching books', error: err.message });
+        }
+    });
+
+    // Add a new book
+    app.post('/book', async (req, res) => {
+        try {
+            const book = new Book({
+                name: req.body.name,
+                isbn: req.body.isbn,
+                author: req.body.author,
+                pages: req.body.pages,
+            });
+
+            const savedBook = await book.save();
+            res.status(201).json({
+                message: 'Successfully added book',
+                book: savedBook,
+            });
+        } catch (err) {
+            res.status(400).json({ message: 'Error adding book', error: err.message });
+        }
+    });
+
+    // Delete a book by ISBN
+    app.delete('/book/:isbn', async (req, res) => {
+        try {
+            const result = await Book.findOneAndDelete({ isbn: req.params.isbn });
+            if (!result) {
+                return res.status(404).json({ message: 'Book not found' });
             }
-        });
+            res.json({ message: 'Successfully deleted the book', book: result });
+        } catch (err) {
+            res.status(500).json({ message: 'Error deleting book', error: err.message });
+        }
+    });
 
-        app.post('/book', async (req, res) => {
-            try {
-                const book = new Book({
-                    name: req.body.name,
-                    isbn: req.body.isbn,
-                    author: req.body.author,
-                    pages: req.body.pages
-                });
-                const savedBook = await book.save();
-                res.status(201).json({
-                    message: 'Successfully added book',
-                    book: savedBook
-                });
-            } catch (err) {
-                res.status(400).json({ message: 'Error adding book', error: err.message });
-            }
-        });
+    // Catch-all route for frontend (Express 5 safe)
+    app.use((req, res) => {
+        res.sendFile(path.join(__dirname, '../public', 'index.html'));
+    });
+};
 
-        app.delete('/book/:isbn', async (req, res) => {
-            try {
-                const result = await Book.findOneAndDelete({ isbn: req.params.isbn });
-                if (!result) {
-                    return res.status(404).json({ message: 'Book not found' });
-                }
-                res.json({ message: 'Successfully deleted the book', book: result });
-            } catch (err) {
-                res.status(500).json({ message: 'Error deleting book', error: err.message });
-            }
-        });
-
-        app.get('*', (req, res) => {
-            res.sendFile(path.join(__dirname, '../public', 'index.html'));
-        });
-    };
     ```
    ![](images/12.png)
 
